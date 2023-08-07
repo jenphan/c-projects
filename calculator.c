@@ -1,53 +1,76 @@
 #include <stdio.h>
+#include <stdlib.h>
 
+void print_error(char *message);
 void print_menu();
-int calculate_result(int op, float num1, float num2);
+float calculate_result(int op, float num1, float num2);
 
 int
 main()
 {
-    int op;
+    int op, c;
     float num1, num2, result;
+
     while(1) {
+        system("clear");
         print_menu();
-        printf("Please enter the operator option: ");
-        if (scanf("%d", &op) != 1 || (op < 1 || op > 5)) {
-            fprintf(stderr, "Please select a valid operation (1 - 5)\n");
-            printf("\n");
-            while (getchar() != '\n');
-            continue;
-        } else {
-            if (op == 5) {
-                printf("Exiting calculator program.\n");
+
+        do {
+            printf("Please enter the operation option: ");
+            if (scanf("%d", &op) != 1) {
+                print_error("Invalid operation option selected");
+            } else if (op < 1 || op > 5) {
+                print_error("Invalid operation option selected");
+            } else {
                 break;
             }
+        } while (1);
+        
+        if (op == 5) {
+            printf("Exiting calculator program.\n");
+            break;
         }
 
-        printf("Please enter the first number: ");
-        if (scanf("%f", &num1) != 1) {
-            fprintf(stderr, "Invalid input for first number\n");
-            printf("\n");
-            while (getchar() != '\n');
-            continue;
-        }
+        do {
+            printf("Please enter the first number: ");
+            if (scanf("%f", &num1) != 1) {
+                print_error("Invalid value input for first number");
+                continue;
+            } else {
+                break;
+            }
+        } while (1);
 
-        printf("Please enter the second number: ");
-        if (scanf("%f", &num2) != 1) {
-            fprintf(stderr, "Invalid input for the second number\n");
-            printf("\n");
-            while (getchar() != '\n');
-            continue;
-        } else if (num2 == 0 && op == 4) {
-            fprintf(stderr, "Cannot divide by zero\n");
-            printf("\n");
-            while (getchar() != '\n');
-            continue;
-        }
+        do {
+            printf("Please enter the second number: ");
+            if (scanf("%f", &num2) != 1) {
+                print_error("Invalid value input for second number");
+                continue;
+            }
+            
+            if (num2 == 0 && op == 4) {
+                print_error("Cannot divide by zero");
+            } else {
+                break;
+            }
+        } while (1);
 
         result = calculate_result(op, num1, num2);  
-        printf("Result: %.2f\n\n", result);     
+        printf("Result: %.2f\n", result);
+        while ((c = getchar()) != '\n' && c != EOF);
+        printf("\nPress anything to continue: ");
+        getchar();
     }
     return 0;
+}
+
+void
+print_error(char *message)
+{
+    int c;
+    fprintf(stderr, "Error: %s\n", message);
+    printf("\n");
+    while ((c = getchar()) != '\n' && c != EOF);
 }
 
 void
@@ -61,18 +84,27 @@ print_menu()
             "5. Exit\n");
 }
 
-int
+float
 calculate_result(int op, float num1, float num2)
 {
     float result;
-    if (op == 1) {
+    switch (op)
+    {
+    case 1:
         result = num1 + num2;
-    } else if (op == 2) {
+        break;
+    case 2:
         result = num1 - num2;
-    } else if (op == 3) {
+        break;
+    case 3:
         result = num1 * num2;
-    } else if (op == 4) {
+        break;
+    case 4:
         result = num1 / num2;
+        break;
+    default:
+        result = 0;
+        break;
     }
     return result;
 }

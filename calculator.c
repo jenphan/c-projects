@@ -1,16 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ADD 1
-#define SUBTRACT 2
-#define MULTIPLY 3
-#define DIVIDE 4
-#define EXIT 5
-
 void print_error(const char *message);
 void print_menu();
-int get_valid_int(const char *prompt, int min, int max);
-float get_valid_float(const char *prompt);
 float calculate_result(int op, float num1, float num2);
 
 int
@@ -23,18 +15,48 @@ main()
         system("clear");
         print_menu();
 
-        op = get_valid_int("Please enter the operation option: ", 1, 5);
+        do {
+            printf("Please enter the operation option: ");
+            if (scanf("%d", &op) != 1) {
+                print_error("Invalid operation option selected");
+            } else if (op < 1 || op > 5) {
+                print_error("Invalid operation option selected");
+            } else {
+                break;
+            }
+        } while (1);
         
-        if (op == EXIT) {
+        if (op == 5) {
             printf("Exiting calculator program.\n");
             break;
         }
 
-        num1 = get_valid_float("Please enter the first number: ");
-        num2 = get_valid_float("Please enter the second number: ");
+        while ((c = getchar()) != '\n' && c != EOF);
+        do {
+            printf("Please enter the first number: ");
+            if (scanf("%f", &num1) != 1) {
+                print_error("Invalid value input for first number");
+                continue;
+            } else {
+                break;
+            }
+        } while (1);
+
+        while ((c = getchar()) != '\n' && c != EOF);
+        do {
+            printf("Please enter the second number: ");
+            if (scanf("%f", &num2) != 1) {
+                print_error("Invalid value input for second number");
+            } else if (num2 == 0 && op == 4) {
+                print_error("Cannot divide by zero");
+            } else {
+                break;
+            }
+        } while (1);
 
         result = calculate_result(op, num1, num2);  
         printf("Result: %.2f\n", result);
+        while ((c = getchar()) != '\n' && c != EOF);
         printf("\nPress anything to continue: ");
         getchar();
     }
@@ -61,52 +83,22 @@ print_menu()
             "5. Exit\n");
 }
 
-int
-get_valid_int(const char *prompt, int min, int max)
-{
-    int value, c;
-    while (1) {
-        printf("%s", prompt);
-        if (scanf("%d", &value) != 1 || value < min || value > max) {
-            print_error("Invalid operation option selected");
-        } else {
-            while ((c = getchar()) != '\n' && c != EOF);
-            return value;
-        }
-    }
-}
-
-float
-get_valid_float(const char *prompt)
-{
-    float value, c;
-    while (1) {
-        printf("%s", prompt);
-        if (scanf("%f", &value) != 1) {
-            print_error("Invalid value input for number");
-        } else {
-            while ((c = getchar()) != '\n' && c != EOF);
-            return value;
-        }
-    }
-}
-
 float
 calculate_result(int op, float num1, float num2)
 {
     float result;
     switch (op)
     {
-    case ADD:
+    case 1:
         result = num1 + num2;
         break;
-    case SUBTRACT:
+    case 2:
         result = num1 - num2;
         break;
-    case MULTIPLY:
+    case 3:
         result = num1 * num2;
         break;
-    case DIVIDE:
+    case 4:
         result = num1 / num2;
         break;
     default:

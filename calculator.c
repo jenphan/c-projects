@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void print_error(char *message);
+void print_error(const char *message);
 void print_menu();
 float calculate_result(int op, float num1, float num2);
 
@@ -31,6 +31,7 @@ main()
             break;
         }
 
+        while ((c = getchar()) != '\n' && c != EOF);
         do {
             printf("Please enter the first number: ");
             if (scanf("%f", &num1) != 1) {
@@ -41,14 +42,12 @@ main()
             }
         } while (1);
 
+        while ((c = getchar()) != '\n' && c != EOF);
         do {
             printf("Please enter the second number: ");
             if (scanf("%f", &num2) != 1) {
                 print_error("Invalid value input for second number");
-                continue;
-            }
-            
-            if (num2 == 0 && op == 4) {
+            } else if (num2 == 0 && op == 4) {
                 print_error("Cannot divide by zero");
             } else {
                 break;
@@ -65,7 +64,7 @@ main()
 }
 
 void
-print_error(char *message)
+print_error(const char *message)
 {
     int c;
     fprintf(stderr, "Error: %s\n", message);

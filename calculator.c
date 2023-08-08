@@ -1,36 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef enum {
+    ADD = 1,
+    SUBTRACT,
+    MULTIPLY,
+    DIVIDE,
+    EXIT
+} Operation;
+
 void clear_input_buffer();
 void print_error(const char *message);
 void print_menu();
-int get_valid_operation();
+Operation get_valid_operation();
 float get_valid_float(const char *prompt);
 float calculate_result(int op, float num1, float num2);
 
 int
 main()
 {
-    int op;
-    float num1, num2, result;
-
     while(1) {
+        Operation op;
+        float num1, num2, result;
+
         system("clear");
         print_menu();
 
         op = get_valid_operation();
         
-        if (op == 5) {
-            printf("Exiting calculator program.\n");
+        if (op == EXIT) {
+            fprintf(stdout, "Exiting calculator program.\n");
             break;
         }
 
         num1 = get_valid_float("Please enter the first number: ");
 
-        if (op == 4) {
+        if (op == DIVIDE) {
             do {
                 num2 = get_valid_float("Please enter the second number: ");
-                if (num2 == 0 && op == 4) {
+                if (num2 == 0) {
                     print_error("Cannot divide by zero");
                 } else {
                     break;
@@ -41,9 +49,9 @@ main()
         }
 
         result = calculate_result(op, num1, num2);  
-        printf("Result: %.2f\n", result);
+        fprintf(stdout, "Result: %.2f\n", result);
         clear_input_buffer();
-        printf("\nPress anything to continue: ");
+        fprintf(stdout, "\nPress enter to continue: ");
         getchar();
     }
     return 0;
@@ -60,14 +68,15 @@ void
 print_error(const char *message)
 {
     fprintf(stderr, "Error: %s\n", message);
-    printf("\n");
+    fprintf(stdout, "\n");
     clear_input_buffer();
 }
 
 void
 print_menu()
 {
-    printf("(´• ω •`) ♡ SIMPLE CALCULATOR MENU (´ε｀ )♡\n"
+    fprintf(stdout,
+            "(´• ω •`) ♡ SIMPLE CALCULATOR MENU (´ε｀ )♡\n"
             "1. Addition\n"
             "2. Subtraction\n"
             "3. Multiplication\n"
@@ -75,12 +84,12 @@ print_menu()
             "5. Exit\n");
 }
 
-int
+Operation
 get_valid_operation()
 {
     int op;
     do {
-        printf("Please enter the operation option: ");
+        fprintf(stdout, "Please enter the operation option: ");
         if (scanf("%d", &op) != 1) {
             print_error("Invalid operation option selected");
         } else if (op < 1 || op > 5) {
@@ -89,7 +98,6 @@ get_valid_operation()
             break;
         }
     } while (1);
-    clear_input_buffer;
     return op;
 }
 
@@ -98,14 +106,13 @@ get_valid_float(const char *prompt)
 {
     float num;
     do {
-        printf("%s", prompt);
+        fprintf(stdout, "%s", prompt);
         if (scanf("%f", &num) != 1) {
             print_error("Invalid value input for the number");
         } else {
             break;
         }
     } while (1);
-    clear_input_buffer;
     return num;
 }
 
@@ -115,16 +122,16 @@ calculate_result(int op, float num1, float num2)
     float result;
     switch (op)
     {
-    case 1:
+    case ADD:
         result = num1 + num2;
         break;
-    case 2:
+    case SUBTRACT:
         result = num1 - num2;
         break;
-    case 3:
+    case MULTIPLY:
         result = num1 * num2;
         break;
-    case 4:
+    case DIVIDE:
         result = num1 / num2;
         break;
     default:

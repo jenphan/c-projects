@@ -23,13 +23,12 @@ main()
         Operation op;
         float num1, num2, result;
 
-        system("clear");
         print_menu();
 
         op = get_valid_operation();
         
         if (op == EXIT) {
-            fprintf(stdout, "Exiting calculator program.\n");
+            fprintf(stdout, "Thank you for using the calculator program. Goodbye!\n");
             break;
         }
 
@@ -49,10 +48,7 @@ main()
         }
 
         result = calculate_result(op, num1, num2);  
-        fprintf(stdout, "Result: %.2f\n", result);
-        clear_input_buffer();
-        fprintf(stdout, "\nPress enter to continue: ");
-        getchar();
+        fprintf(stdout, "Result: %.2f\n\n", result);
     }
     return 0;
 }
@@ -69,7 +65,6 @@ print_error(const char *message)
 {
     fprintf(stderr, "Error: %s\n", message);
     fprintf(stdout, "\n");
-    clear_input_buffer();
 }
 
 void
@@ -88,11 +83,11 @@ Operation
 get_valid_operation()
 {
     int op;
+    char input[10];
     do {
         fprintf(stdout, "Please enter the operation option: ");
-        if (scanf("%d", &op) != 1) {
-            print_error("Invalid operation option selected");
-        } else if (op < 1 || op > 5) {
+        fgets(input, sizeof(input), stdin);
+        if (sscanf(input, "%d", &op) != 1 || op < 1 || op > 5) {
             print_error("Invalid operation option selected");
         } else {
             break;
@@ -105,9 +100,11 @@ float
 get_valid_float(const char *prompt)
 {
     float num;
+    char input[100];
     do {
         fprintf(stdout, "%s", prompt);
-        if (scanf("%f", &num) != 1) {
+        fgets(input, sizeof(input), stdin);
+        if (sscanf(input, "%f", &num) != 1) {
             print_error("Invalid value input for the number");
         } else {
             break;

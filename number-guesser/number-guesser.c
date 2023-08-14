@@ -3,6 +3,9 @@
 #include <string.h>
 #include <time.h>
 
+int generate_number();
+int player_guess();
+
 int
 main()
 {
@@ -11,29 +14,20 @@ main()
     char input[10];
     char again[10];
     
-    srand(time(NULL));
     printf("(´• ω •`) ♡ NUMBER GUESSING GAME (´ε｀ )♡\n");
 
     do {
         attempts = 0;
         points = 0;
-        secret = rand() % 100 + 1;
+        secret = generate_number();
 
         while(1) {
-            printf("\nPlease guess a number from 1 - 100 (or q to quit): ");
-
-            fgets(input, sizeof(input), stdin);
-
-            if (strncmp(input, "q", 1) == 0) {
+            guess = player_guess();
+            if (guess == -1) {
                 printf("You give up! The secret number was %d.\n", secret);
                 break;
-            }
-            if (sscanf(input, "%d", &guess) != 1) {
-                printf("Please enter in a valid integer.\n");
-            } else if (guess < 1 || guess > 100) {
-                printf("Please enter in a number from 1 to 100.\n");
             } else {
-                attempts += 1;
+                attempts++;
                 if (secret == guess) {
                     points += 1;
                     fprintf(stdout, "You correctly guessed the secret number %d in %d attempt(s)!\n", secret, attempts);
@@ -48,7 +42,7 @@ main()
                         fprintf(stdout, "Invalid input. Playing another game.\n");
                     }
 
-                    secret = rand() % 100 + 1;
+                    secret = generate_number();
                     attempts = 0;
                 } else if (secret > guess) {
                     fprintf(stdout, "The secret number is HIGHER than your guess %d.\n", guess);
@@ -59,4 +53,34 @@ main()
         } 
     } while (1);
     return 0;
+}
+
+int
+generate_number()
+{
+    srand(time(NULL));
+    return rand() % 100 + 1;
+}
+
+int
+player_guess()
+{
+    int guess;
+    char input[10];
+
+    while (1) {
+        printf("\nPlease guess a number from 1 - 100 (or 'q' to quit): ");
+
+        fgets(input, sizeof(input), stdin);
+
+        if (strncmp(input, "q", 1) == 0) {
+            return -1;
+        } else if (sscanf(input, "%d", &guess) != 1) {
+            printf("Please enter in a valid integer or 'q' to quit.\n");
+        } else if (guess < 1 || guess > 100) {
+            printf("Please enter in a number from 1 to 100.\n");
+        } else {
+            return guess;
+        }
+    }
 }

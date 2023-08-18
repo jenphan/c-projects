@@ -21,8 +21,7 @@ main()
 
         do {
             printf("Please enter what unit to convert to (f/c): ");
-            unit = getchar();
-            unit = tolower(unit);
+            unit = tolower(getchar());
 
             if (unit == 'f') {
                 convert_c_to_f(original);
@@ -34,7 +33,7 @@ main()
 
         printf("\nConvert another temperature (y/n)? ");
         while ((again = getchar()) == '\n');
-    } while (again == 'y');
+    } while (again == 'y' || again == 'Y');
 
     printf("\nThank you for using the temperature converter! Goodbye!\n");
     return 0;
@@ -43,7 +42,7 @@ main()
 void
 convert_f_to_c(double f)
 {
-    double c = ((f - 32) * 5) / 9;
+    double c = (f - 32) * 5 / 9;
     printf("%.2f°F is %.2f°C\n", f, c);
 }
 

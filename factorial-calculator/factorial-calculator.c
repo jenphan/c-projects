@@ -1,47 +1,39 @@
 #include <stdio.h>
-
-long long get_factorial(int num);
+#include <ctype.h>
 
 int
 main()
 {
-    int num, i;
-    long long answer;
-    char again;
+    int number;
+    long long factorial;
+    char repeat;
 
     printf("(´• ω •`) ♡ FACTORIAL CALCULATOR (´ε｀ )♡\n");
     do {
-        answer = 1;
+        factorial = 1;
 
-        printf("\nPlease enter a positive integer: ");
-        if (scanf("%d", &num) != 1) {
+        printf("\nPlease enter a positive number: ");
+        if (scanf("%d", &number) != 1) {
             printf("Invalid input. Please enter a valid number.\n");
             while (getchar() != '\n');
             continue;
         }
 
-        if (num < 0) {
+        if (number < 0) {
             printf("Factorial is not defined for negative numbers.\n");
-        } else if (num > 20) {
-            printf("This number's factorial would be too large to display.\n");
+        } else if (number > 20) {
+            printf("Factorial of %d is too large to display.\n", number);
         } else {
-            answer = get_factorial(num);
+            for (int i = 1; i <= number; i++) {
+                factorial *= i;
+            }
+            printf("%d! = %lld\n", number, factorial);
         }
-        printf("\nCalculate another factorial (y/n)? ");
-        while ((again = getchar()) == '\n');
-    } while (again == 'y' || again == 'Y');
+
+        printf("\nDo you want to calculate another factorial (y/n)? ");
+        while ((repeat = tolower(getchar())) == '\n');
+    } while (repeat == 'y' || repeat == 'Y');
+
     printf("\nThank you for using the Factorial Calculator. Goodbye!\n");
     return 0;
-}
-
-long long
-get_factorial(int num)
-{
-    int i;
-    long long answer = 1;
-    for (i = 1; i <= num; i++) {
-            answer *= i;
-        }
-    printf("%d! = %lld\n", num, answer);
-    return answer;
 }

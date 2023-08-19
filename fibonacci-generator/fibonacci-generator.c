@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <ctype.h>
 
 int fibonacci(int number);
 
@@ -6,18 +7,31 @@ int
 main()
 {
     int number;
-    if (scanf("%d", &number) != 1) {
-        printf("Invalid input. Please enter a valid integer.\n");
-    }
+    char repeat;
 
-    int sequence[number];
-    for (int i = 0; i < number; i++) {
-        sequence[i] = fibonacci(i);
-    }
+    printf("(´• ω •`) ♡ FIBONACCI GENERATOR (´ε｀ )♡\n");
+    do {
+        printf("\nPlease enter number of terms to generate: ");
+        while (scanf("%d", &number) != 1) {
+            printf("Invalid input. Please enter a valid integer. ");
+            while (getchar() != '\n');
+        }
 
-    for (int i = 0; i < number; i++) {
-        printf("%d ", sequence[i]);
-    }
+        int sequence[number];
+        for (int i = 0; i < number; i++) {
+            sequence[i] = fibonacci(i);
+        }
+
+        for (int i = 0; i < number; i++) {
+            printf("%d ", sequence[i]);
+        }
+
+        printf("\n\nWould you like to generate another sequence (y/n)? ");
+        while ((repeat = tolower(getchar())) == '\n');
+    } while (repeat == 'y' || repeat == 'Y');
+
+    printf("\nThank you for using Fibonacci Generator. Goodbye!\n");
+    return 0;
 }
 
 int

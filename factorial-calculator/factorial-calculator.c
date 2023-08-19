@@ -13,10 +13,9 @@ main()
         factorial = 1;
 
         printf("\nPlease enter a positive number: ");
-        if (scanf("%d", &number) != 1) {
-            printf("Invalid input. Please enter a valid number.\n");
+        while (scanf("%d", &number) != 1) {
+            printf("Invalid input. Please enter a valid number. ");
             while (getchar() != '\n');
-            continue;
         }
 
         if (number < 0) {

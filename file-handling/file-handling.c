@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define MAX_NUMBERS 100
 
+bool open_file(char *filename, FILE **file);
 void print_menu();
-double calculate_sum(int *numbers, int count);
-double find_maximum(int *numbers, int count);
-double find_minimum(int *numbers, int count);
+int calculate_sum(int *numbers, int count);
+int find_maximum(int *numbers, int count);
+int find_minimum(int *numbers, int count);
 
 int
 main()
@@ -17,13 +19,7 @@ main()
     double result = 0;
 
     printf("(´• ω •`) ♡ FILE HANDLING PROGRAM (´ε｀ )♡\n");
-    printf("Please enter the name of the file: ");
-    fgets(fileName, sizeof(fileName), stdin);
-    sscanf(fileName, "%255[^\n]", fileName);
-
-    file = fopen(fileName, "r");
-    if (file == NULL) {
-        printf("File %s not found. Please enter a valid file name. ", fileName);
+    if (!open_file(fileName, &file)) {
         return 1;
     }
 
@@ -35,7 +31,7 @@ main()
     print_menu();
     printf("Please enter a valid operation (1 - 5): ");
     if (scanf("%d", &operation) != 1 || operation < 1 || operation > 5) {
-        printf("Invalid input. Please enter a valid operation.");
+        printf("Invalid input. Please enter a valid operation.\n");
         return 1;
     }
     
@@ -52,6 +48,7 @@ main()
             break;
         case 4:
             result = find_minimum(numbers, count);
+            break;
         case 5:
             printf("\nThank you for using the File Handling Program. Goodbye!\n");
             return 0;
@@ -65,6 +62,22 @@ main()
     return 0;
 }
 
+bool
+open_file(char *filename, FILE **file)
+{
+    printf("Please enter the name of the file: ");
+    if (fgets(filename, 256, stdin) == NULL) {
+        return false;
+    }
+    sscanf(filename, "%255[^\n]", filename);
+    *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("File %s not found. Please enter a valid file name.\n", filename);
+        return false;
+    }
+    return true;
+}
+
 void
 print_menu()
 {
@@ -76,20 +89,20 @@ print_menu()
         "5. Exit\n\n");
 }
 
-double
+int
 calculate_sum(int *numbers, int count)
 {
-    double sum;
+    int sum = 0;
     for (int i = 0; i < count; i++) {
         sum += numbers[i];
     }
     return sum;
 }
 
-double
+int
 find_maximum(int *numbers, int count)
 {
-    double maximum = numbers[0];
+    int maximum = numbers[0];
     for (int i = 1; i < count; i++) {
         if (numbers[i] > maximum) {
             maximum = numbers[i];
@@ -98,10 +111,10 @@ find_maximum(int *numbers, int count)
     return maximum;
 }
 
-double
+int
 find_minimum(int *numbers, int count)
 {
-    double minimum = numbers[0];
+    int minimum = numbers[0];
     for (int i = 1; i < count; i++) {
         if (numbers[i] < minimum) {
             minimum = numbers[i];

@@ -14,13 +14,14 @@ main()
     printf("(´• ω •`) ♡ PALINDROME CHECKER (´ε｀ )♡\n");
     do {
         printf("\nPlease enter a single word to check: ");
-        scanf("%s", word);
-        while (getchar() != '\n');
+        fgets(word, sizeof(word), stdin);
+        word[strcspn(word, "\n")] = '\0';
 
         check_palindrome(word);
 
         printf("\nWould you like to check another word (y/n)? ");
         while ((again = getchar()) == '\n');
+        while (getchar() != '\n');
     } while (tolower(again) == 'y');
 
     printf("\nThank you for using the palindrome checker. Goodbye!\n");
